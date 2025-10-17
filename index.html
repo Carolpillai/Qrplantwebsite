@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plant Information</title>
+    <style>
+      body {
+        font-family: "Times New Roman", Times, serif;
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          font-family: "Times New Roman", Times, serif;
+        }
+      }
+
+      /* Default styles for larger screens */
+      .logo {
+        position: fixed;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 460px;
+        height: 117px;
+        background-image: url("collegehearder.png");
+        background-size: 460px;
+        background-position: center;
+        border-radius: 8px;
+        z-index: 100;
+      }
+
+      /* Mobile view adjustments */
+      @media (max-width: 768px) {
+        .logo {
+          width: 350px; /* Adjust width for mobile */
+          height: 95px; /* Adjust height for mobile */
+          background-size: 341px; /* Adjust background size for mobile */
+          top: 4px; /* Adjust top position for mobile */
+        }
+      }
+
+      .container {
+        width: 100%;
+        height: 600px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255);
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        padding: 20px;
+        text-align: center;
+        overflow: auto;
+        margin-top: 110px;
+        z-index: 9;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          height: 590px;
+          padding: 15px;
+          margin-top: 99px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          height: auto;
+          padding: 10px;
+        }
+      }
+
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .container {
+          height: auto;
+          padding: 18px;
+        }
+      }
+
+      .plant-details {
+        max-width: 100%;
+        max-height: 100%;
+        overflow: auto;
+        box-sizing: border-box;
+        border: 2px solid #3498db;
+        border-radius: 8px;
+        padding: 10px;
+        background: rgba(255, 255, 255);
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+        animation: fadeIn 1s ease-in;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      h1 {
+        color: #0ee315;
+        font-size: 2em;
+      }
+
+      .plant-details img {
+        width: 100%;
+        max-width: 200px;
+        height: 100%;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        display: block;
+        margin: 10px auto;
+        animation: zoomIn 1s ease-in;
+        cursor: pointer;
+      }
+
+      p {
+        color: #000000;
+        margin: 5px 0;
+        font-size: 0.9em;
+      }
+
+      a {
+        color: #000000;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      /* Modal styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 200;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        overflow: auto;
+      }
+
+      .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 100%;
+        max-height: 100%;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .modal-content img {
+        width: 650px; /* Default image size */
+        height: 500px; /* Maintain aspect ratio */
+      }
+
+      .close {
+        position: absolute;
+        top: 15px;
+        right: 25px;
+        font-size: 2em;
+        color: white;
+        cursor: pointer;
+      }
+
+      /* Mobile and Tablet View */
+      @media (max-width: 768px) {
+        .modal-content {
+          max-width: 100%; /* Increase width on smaller screens */
+          max-height: 100%; /* Increase height on smaller screens */
+          width: 400px;
+          height: 400px;
+          padding: 15px; /* Reduce padding for smaller screens */
+        }
+
+        .modal-content img {
+          max-width: 100%; /* Increase width on smaller screens */
+          max-height: 100%; /* Increase height on smaller screens */
+          width: 400px;
+          height: 400px;
+        }
+
+        .close {
+          font-size: 1.5em; /* Adjust close button size for mobile */
+          top: 10px;
+          right: 15px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .modal-content {
+          max-width: 100%; /* Increase width on smaller screens */
+          max-height: 100%; /* Increase height on smaller screens */
+          width: 350px;
+          height: 350px;
+          padding: 10px; /* Further reduce padding for very small screens */
+        }
+
+        .modal-content img {
+          max-width: 100%; /* Increase width on smaller screens */
+          max-height: 100%; /* Increase height on smaller screens */
+          width: 350px;
+          height: 350px;
+        }
+
+        .close {
+          font-size: 1.2em; /* Further adjust close button size for very small screens */
+          top: 5px;
+          right: 10px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 10px;
+        }
+        .plant-details {
+          padding: 5px;
+        }
+        img {
+          max-width: 200px;
+          max-height: 200px;
+        }
+        h1 {
+          font-size: 1.1em;
+        }
+        p {
+          font-size: 0.9em;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .plant-details {
+          padding: 5px;
+        }
+        img {
+          max-width: 150px;
+          max-height: 150px;
+        }
+        h1 {
+          font-size: 1em;
+        }
+        p {
+          font-size: 0.8em;
+        }
+      }
+
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .container {
+          padding: 15px;
+        }
+        .plant-details {
+          padding: 15px;
+        }
+        img {
+          max-width: 300px;
+          max-height: 300px;
+        }
+        h1 {
+          font-size: 1.2em;
+        }
+        p {
+          font-size: 1em;
+        }
+      }
+
+      .map-modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1000; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.8); /* Black with opacity */
+      }
+
+      /* Modal Content */
+      .map-modal-content {
+        position: relative;
+        margin: auto;
+        padding: 0;
+        width: 80%; /* Width for desktop */
+        height: 80%; /* Height for desktop to make it square */
+        top: 70px; /* Move the map content down by 70px */
+        box-sizing: border-box;
+        max-width: 600px; /* Ensure it doesn't exceed 600px width */
+        max-height: 600px; /* Ensure it doesn't exceed 600px height */
+      }
+
+      /* Modal for smaller screens like mobile/tablet */
+      @media screen and (max-width: 768px) {
+        .map-modal-content {
+          width: 75%; /* Adjusted width for mobile, keeping it square */
+          height: 75%; /* Matching height for a square shape */
+          top: 50px; /* Shift down by 50px */
+          max-width: 400px; /* Ensure it doesn't exceed 400px width */
+          max-height: 400px; /* Ensure it doesn't exceed 400px height */
+        }
+      }
+
+      /* For very small screens (mobile portrait) */
+      @media screen and (max-width: 480px) {
+        .map-modal-content {
+          width: 80%; /* Adjusted width for small screens */
+          height: 80%; /* Matching height for a square shape */
+          top: 40px; /* Shift down by 40px */
+          max-width: 300px; /* Ensure it doesn't exceed 300px width */
+          max-height: 300px; /* Ensure it doesn't exceed 300px height */
+        }
+      }
+
+      .close {
+        color: rgb(255, 0, 0); /* Close button color */
+        position: absolute;
+        top: 10px;
+        right: 25px;
+        font-size: 35px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: #000000; /* Change color on hover */
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo"></div>
+    <div class="container" id="plantInfo" style="position: relative">
+      <div class="plant-details">
+        <!-- Plant info will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <!-- About Us button fixed to the left-middle of the viewport with vertically aligned text -->
+    <div
+      class="about-button"
+      style="
+        position: fixed;
+        top: 37%;
+        left: -38px;
+        padding: 10px;
+        z-index: 10;
+        transform: translateY(-50%);
+      "
+    >
+      <a
+        href="https://675b16ea913e632d20cebfc6--majestic-marzipan-b3937d.netlify.app/about"
+        style="
+          text-decoration: none;
+          background-color: #1bbddd;
+          padding: 12px 24px;
+          border-radius: 5px;
+          font-weight: bold;
+          display: inline-block;
+          transform: rotate(270deg);
+        "
+      >
+        About Us
+      </a>
+    </div>
+
+    <!-- Modal structure -->
+    <div id="imageModal" class="modal">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div class="modal-content">
+        <img id="modalImg" src="" alt="Plant Image" />
+      </div>
+    </div>
+
+    <div id="mapModal" class="map-modal">
+      <div class="map-modal-content">
+        <span class="close" onclick="closeMapModal()">&times;</span>
+        <div id="mapContainer" style="width: 100%; height: 80vh"></div>
+      </div>
+    </div>
+
+    <!-- JavaScript for fetching and displaying plant information -->
+    <script>
+      let plants = [];
+      const plantIndexKey = "currentPlantIndex";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        fetch(
+          "https://gist.githubusercontent.com/Carolpillai/a55e403e7745d5a7747c2e5cb716b1a7/raw/7ad2351e229c3fef5346435096935d9eff0165d3/plant.txt"
+        )
+          .then((response) => response.text())
+          .then((data) => {
+            plants = parseCSV(data);
+            plants.sort((a, b) => a.name.localeCompare(b.name));
+
+            const plantHash = decodeURIComponent(
+              window.location.hash.substring(1)
+            ); // Get the hash without '#'
+            if (plantHash) {
+              // If the URL has a hash (plant name), show that specific plant
+              const plant = plants.find(
+                (p) => p.name.toLowerCase() === plantHash.toLowerCase()
+              );
+              if (plant) {
+                displayPlant(plant);
+              } else {
+                showPlant(); // If plant not found, show the default cycling behavior
+              }
+            } else {
+              showPlant(); // Default behavior if no hash in the URL
+            }
+          })
+          .catch((error) =>
+            console.error("Error fetching the CSV data:", error)
+          );
+      });
+
+      function parseCSV(data) {
+        return data
+          .trim()
+          .split("\n")
+          .map((line) => {
+            const [
+              name,
+              scientificName,
+              type,
+              height,
+              lifespan,
+              oxygenLevel,
+              description,
+              googleLink,
+              youtubeLink,
+              location,
+            ] = line.split("\t");
+            return {
+              name,
+              scientificName,
+              type,
+              height,
+              lifespan,
+              oxygenLevel,
+              description,
+              googleLink,
+              youtubeLink,
+              location,
+            };
+          });
+      }
+
+      function capitalizeWords(str) {
+        return str
+          .toLowerCase()
+          .split(" ")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+      }
+
+      function showPlant() {
+        if (plants.length === 0) return;
+        let index = parseInt(sessionStorage.getItem(plantIndexKey)) || 0;
+        const plant = plants[index];
+        displayPlant(plant);
+        index = (index + 1) % plants.length;
+        sessionStorage.setItem(plantIndexKey, index);
+      }
+
+      function displayPlant(plant) {
+        const plantInfoContainer = document.querySelector(".plant-details");
+        const plantNameCapitalized = capitalizeWords(plant.name);
+
+        const plantPageContent = `
+    <h1>${plant.name} (${plant.scientificName})</h1>
+    <img src="images/${plantNameCapitalized}.jpg" alt="${
+          plant.name
+        }" onclick="openModal(this.src)">
+        <p><strong>Type:</strong> ${plant.type}</p>
+        <p><strong>Height:</strong> ${plant.height}</p>
+        <p><strong>Lifespan:</strong> ${plant.lifespan} years</p>
+        <p><strong>Oxygen Level:</strong> ${plant.oxygenLevel}</p>
+        <p>${plant.description}</p>
+        <div style="display: flex; justify-content: space-between;">
+            <button onclick="window.open('${plant.googleLink}', '_blank')" 
+                style="color: green; font-weight: bold; background: none; border: 2px solid green; padding: 5px; cursor: pointer; margin-left: 7px;">
+                More Info on Google
+            </button>
+            ${
+              plant.youtubeLink
+                ? `<button onclick="window.open('${plant.youtubeLink}', '_blank')" 
+                style="color: red; font-weight: bold; background: none; border: 2px solid red; padding: 5px; cursor: pointer; margin-left: 20px;">
+                Watch on YouTube
+            </button>`
+                : ""
+            }
+            ${
+              plant.location
+                ? `<button onclick="openMapModal('${plant.location}')" 
+                style="color: blue; font-weight: bold; background: none; border: 2px solid blue; padding: 5px; cursor: pointer; margin-left: 20px;">
+                Mostly Found in ${plant.location}
+            </button>`
+                : ""
+            }
+        </div>
+`;
+
+        plantInfoContainer.innerHTML = plantPageContent;
+      }
+
+      function openModal(src) {
+        document.getElementById("modalImg").src = src;
+        document.getElementById("imageModal").style.display = "block";
+      }
+
+      function closeModal() {
+        document.getElementById("imageModal").style.display = "none";
+      }
+
+      function openMapModal(location) {
+        const apiKey = "AIzaSyC_X8p8OmhmohqVseE0tGn9hb9n6zSeYl4"; // Replace this with your actual API key
+        const mapUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(
+          location.trim()
+        )}`;
+
+        // Log the map URL for debugging
+        console.log("Map URL: ", mapUrl);
+
+        const mapContainer = document.getElementById("mapContainer");
+        mapContainer.innerHTML = `<iframe width="100%" height="100%" frameborder="0" style="border:0" src="${mapUrl}" allowfullscreen></iframe>`;
+
+        // Check if mapContainer is available before displaying the modal
+        if (mapContainer) {
+          document.getElementById("mapModal").style.display = "block";
+        } else {
+          console.error("Map container not found.");
+        }
+      }
+
+      function closeMapModal() {
+        document.getElementById("mapModal").style.display = "none";
+        document.getElementById("mapContainer").innerHTML = ""; // Clear the map when closing
+      }
+    </script>
+  </body>
+</html>
